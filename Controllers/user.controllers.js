@@ -19,13 +19,13 @@ module.exports.register = async (req, res) => {
     try {
         const existingUser = await Userschema.findOne({ Email: Email });
         if (existingUser) {
-            console.log("Email is already in use");
-            return res.status(200).json({ message: "Email is already in use", status: false });
+            console.log("Email is already in used");
+            return res.status(200).json({ message: "Email is already in used", status: false });
         }
         const existingUserByUsername = await Userschema.findOne({ Username: Username });
         if (existingUserByUsername) {
-            console.log("Username is already in use");
-            return res.status(200).json({ message: "Username is already in use", status: false });
+            console.log("Username is already in used");
+            return res.status(200).json({ message: "Username is already in used", status: false });
         }
         else {
             const newUser = new Userschema(req.body);
@@ -68,6 +68,7 @@ module.exports.login = (req, res) => {
     })
     .catch((err) => {
         console.log("error occured", err);
-        return res.status(200).json({ message: "Error Occured", status: false })
+        // return res.status(200).json({ message: "Error Occured", status: false })
+        return res.status(500).json({ message: "Internal Server Error. Please try again later.", status: false});
     })
 }
