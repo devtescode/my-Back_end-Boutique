@@ -35,24 +35,24 @@ module.exports.register = async (req, res) => {
         }
     } catch (err) {
         console.log(err);
-        return res.status(500).json({ message: "Internal Server Error. Please try again later.", status: false});
+        return res.status(500).json({ message: "Internal Server Error. Please try again later.", status: false });
     }
 }
 
 module.exports.login = (req, res) => {
     let { Email, Password } = req.body;
-    Userschema.findOne({Email: Email}).then(async (user) => {
-        if (!user){
+    Userschema.findOne({ Email: Email }).then(async (user) => {
+        if (!user) {
             res.status(200).json({ message: "Email Not Found", status: false })
             console.log("Email not found");
         }
-        else{
+        else {
             const correctpassword = await user.compareUser(Password)
             if (!correctpassword) {
                 res.status(200).json({ message: "Incorrect Password", status: false })
                 console.log("Incorrect Password");
             }
-            else{
+            else {
                 let token = jwt.sign({ id: user.id }, secret, { expiresIn: "24h" })
                 const userDatas = {
                     userId: user.id,
@@ -63,12 +63,38 @@ module.exports.login = (req, res) => {
                 res.status(200).json({ message: "Login Success", status: true, token, userDatas })
                 console.log("user success", userDatas);
             }
-            
+
         }
     })
-    .catch((err) => {
-        console.log("error occured", err);
-        // return res.status(200).json({ message: "Error Occured", status: false })
-        return res.status(500).json({ message: "Internal Server Error. Please try again later.", status: false});
-    })
+        .catch((err) => {
+            console.log("error occured", err);
+            // return res.status(200).json({ message: "Error Occured", status: false })
+            return res.status(500).json({ message: "Internal Server Error. Please try again later.", status: false });
+        })
+}
+
+module.exports.db = (req, res) => {
+    console.log(req.body);
+    // const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+    let token = req.headers.authorization.split(" ")[1]
+    if (!token) {
+        return res.status(401).send({ status: false, message: "Authorization token missing" });
+    }
+
+    jwt.verify(token, secret, ((err, result) => {
+        if (err) {
+            res.send({ status: false, message: "wrong token" })
+            console.log(err);
+        }
+        else {
+            Userschema.findOne({ _id: result.id }).then((user) => {
+                res.send({ status: true, message: "Success token correct", user })
+                console.log(user);
+            })
+                .catch((err) => {
+                    console.log("error Occured", err);
+                    res.status(500).send({ status: false, message: "Internal server error" });
+                })
+        }
+    }))
 }
