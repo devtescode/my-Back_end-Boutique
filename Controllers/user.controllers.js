@@ -73,9 +73,9 @@ module.exports.login = (req, res) => {
         })
 }
 
+// const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
 module.exports.db = (req, res) => {
     console.log(req.body);
-    // const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
     let token = req.headers.authorization.split(" ")[1]
     if (!token) {
         return res.status(401).send({ status: false, message: "Authorization token missing" });
@@ -87,7 +87,7 @@ module.exports.db = (req, res) => {
             console.log(err);
         }
         else {
-            Userschema.findOne({ _id: result.id }).then((user) => {
+            Userschema.findOne({ _id: result.id }).select('-Password').then((user) => {
                 res.send({ status: true, message: "Success token correct", user })
                 console.log(user);
             })
