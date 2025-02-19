@@ -6,6 +6,8 @@ let schema = mongoose.Schema({
     Number: { type: Number, required: true },
     Email: { type: String, unique: true, required: true },
     Password: { type: String, required: true },
+    role: { type: String, enum: ["user", "admin"], default: "user" }, // Add role field
+
 })
 
 

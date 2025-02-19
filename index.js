@@ -5,6 +5,7 @@ const env = require ('dotenv').config()
 const PORT = process.env.PORT || 4500
 const URI = process.env.URI
 const userRoutes = require("./Routes/user.routes")
+const adminRoutes = require("./Routes/admin.routes")
 
 const cors = require('cors')
 app.use(cors())
@@ -20,6 +21,8 @@ mongoose.connect(URI)
 })
 
 app.use("/usercallerfetch", userRoutes)
+app.use("/admin", adminRoutes)
+
 
 
 app.get("/", (req, res)=>{
