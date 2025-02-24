@@ -6,8 +6,7 @@ const Product = require('../Models/product');
 
 
 module.exports.uploadProduct = async (req, res) => {
-    
-    try {
+    try {        
         const { productName, price, description } = req.body;
         const imageUrl = req.file?.path; // Cloudinary stores image in `path`        
         if (!imageUrl) {
@@ -31,3 +30,12 @@ module.exports.uploadProduct = async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 };
+
+module.exports.getuploadProducts = async(req, res)=>{
+    try {
+        const products = await Product.find(); // Assuming Mongoose model
+        res.json({ products });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+}
