@@ -35,6 +35,8 @@ module.exports.getuploadProducts = async(req, res)=>{
     try {
         const products = await Product.find(); // Assuming Mongoose model
         res.json({ products });
+        console.log(products);
+        
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }
