@@ -17,6 +17,10 @@ const ProductSchema = new mongoose.Schema({
         type: String, // Store Cloudinary image URL
         required: true,
     },
+    likes: {
+        type: [String],  // <-- Fix here (array of strings)
+        default: []
+    }
 }, { timestamps: true });
 
 const Product = mongoose.model("Product", ProductSchema);

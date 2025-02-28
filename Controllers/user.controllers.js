@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const secret = process.env.SECRET
 const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
+const Product = require("../Models/product")
 // const apiKey = process.env.TRUECALLER_API_KEY;
 
 env.config()
@@ -61,7 +62,7 @@ module.exports.login = (req, res) => {
                     email: user.Email,
                 }
                 res.status(200).json({ message: "Login Success", status: true, token, userDatas })
-                console.log("user success", userDatas);
+                // console.log("user success", userDatas);
             }
 
         }
@@ -97,4 +98,38 @@ module.exports.db = (req, res) => {
                 })
         }
     }))
-}   
+}
+
+
+module.exports.like = async (req, res) => {
+    try {
+        const { userId } = req.body;   // userId comes from body
+        const { id: productId } = req.params;  // productId comes from params
+        console.log("Bopdy",req.body)
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).json({ message: "Invalid product ID" });
+        }
+
+        const product = await Product.findById(productId);
+        console.log(product);
+        
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        const alreadyLiked = product.likes.includes(userId);
+        // console.log(alreadyLiked);
+        
+        if (alreadyLiked) {
+            product.likes = product.likes.filter(id => id !== userId);
+        } else {
+            product.likes.push(userId);
+        }
+
+        await product.save();
+
+        res.status(200).json({ message: "Like status updated", product });
+    } catch (error) {
+        console.error("Error in like function:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
