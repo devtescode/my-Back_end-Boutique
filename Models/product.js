@@ -19,8 +19,10 @@ const ProductSchema = new mongoose.Schema({
     },
     likes: {
         type: [String],  // <-- Fix here (array of strings)
-        default: []
+        default: [],
+        ref: "usercallerfetch"
     }
+    
 }, { timestamps: true });
 
 const Product = mongoose.model("Product", ProductSchema);

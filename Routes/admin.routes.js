@@ -1,5 +1,5 @@
 const express = require('express');
-const { adminlogin } = require("../Controllers/Admincontrollers");
+const { adminlogin, totalLikes, likedUsersWithProducts } = require("../Controllers/Admincontrollers");
 // const { upload } = require('../Controllers/upload');
 const { upload } = require('../config/cloudinary'); 
 const { uploadProduct, getuploadProducts, saveuploadProduct, deleteuploadProduct, availableProducts, recentProduct } = require('../Controllers/upload'); // Ensure correct controller function import
@@ -13,5 +13,7 @@ router.put("/saveuploadProduct/:id", saveuploadProduct)
 router.delete("/deleteuploadProduct/:id", deleteuploadProduct)
 router.get("/availableProducts", availableProducts)
 router.get("/recentProduct", recentProduct)
+router.get("/totalLikes", totalLikes)
+router.get("/likedUsersWithProducts", likedUsersWithProducts)
 
 module.exports = router;
