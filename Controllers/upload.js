@@ -95,4 +95,40 @@ module.exports.recentProduct = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+ 
+
+module.exports.getProduct = async(req, res)=>{
+    try {
+       const productId = req.params.id;
+       
+       // Find the product by ID
+       const product = await Product.findById(productId);
     
+       if (!product) {
+         return res.status(404).json({ success: false, message: "Product not found" });
+       }
+    
+       res.status(200).json({ success: true, product });
+       } catch (error) {
+       console.error("Error fetching product:", error);
+       res.status(500).json({ success: false, message: "Server error" });
+    }
+}
+// router.get("/getProduct/:id", async (req, res) => {
+//     try {
+//       const productId = req.params.id;
+      
+//       // Find the product by ID
+//       const product = await Product.findById(productId);
+  
+//       if (!product) {
+//         return res.status(404).json({ success: false, message: "Product not found" });
+//       }
+  
+//       res.status(200).json({ success: true, product });
+//     } catch (error) {
+//       console.error("Error fetching product:", error);
+//       res.status(500).json({ success: false, message: "Server error" });
+//     }
+//   });
+  

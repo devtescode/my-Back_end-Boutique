@@ -2,7 +2,7 @@ const express = require('express');
 const { adminlogin, totalLikes, likedUsersWithProducts } = require("../Controllers/Admincontrollers");
 // const { upload } = require('../Controllers/upload');
 const { upload } = require('../config/cloudinary'); 
-const { uploadProduct, getuploadProducts, saveuploadProduct, deleteuploadProduct, availableProducts, recentProduct } = require('../Controllers/upload'); // Ensure correct controller function import
+const { uploadProduct, getuploadProducts, saveuploadProduct, deleteuploadProduct, availableProducts, recentProduct, getProduct } = require('../Controllers/upload'); // Ensure correct controller function import
 const router = express.Router();
 
 router.post("/adminlogin", adminlogin)
@@ -15,5 +15,6 @@ router.get("/availableProducts", availableProducts)
 router.get("/recentProduct", recentProduct)
 router.get("/totalLikes", totalLikes)
 router.get("/likedUsersWithProducts", likedUsersWithProducts)
+router.get("/getProduct/:id", getProduct)
 
 module.exports = router;
