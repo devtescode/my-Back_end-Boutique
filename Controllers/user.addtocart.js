@@ -58,3 +58,25 @@ module.exports.useraddtocart = async (req, res) => {
         res.status(500).json({ message: "Error adding to cart", error });
     }
 };
+
+module.exports.usergetusercart = async (req, res) => {
+    const { userId } = req.params; // This is pulling the userId from the URL
+
+    try {
+        const user = await Userschema.findById(userId).populate("cart.productId");
+        const populatedCart = user.cart.map(item => ({
+            productName: item.productId.productName,
+            description: item.productId.description,
+            price: item.productId.price,
+            image: item.productId.image,
+            state: item.state,
+            city: item.city
+        }));
+
+        console.log("Populated Cart Items:", populatedCart);
+        res.json({ cartItems: populatedCart });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error fetching cart items" });
+    }
+};
