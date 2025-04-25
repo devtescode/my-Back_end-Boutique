@@ -113,3 +113,32 @@ module.exports.likedUsersWithProducts = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+module.exports.getaddtochatforeachuser = async(req, res)=>{
+    try {
+        const users = await Userschema.find().populate("cart.productId");
+
+        const userCarts = users.map(user => ({
+            userId: user._id,
+            username: user.Username,
+            email: user.Email,
+            cart: user.cart.map(item => ({
+                productName: item.productId?.productName || "Product not found",
+                description: item.productId?.description || "",
+                price: item.productId?.price || 0,
+                image: item.productId?.image || "",
+                state: item.state,
+                city: item.city
+            }))
+        }));
+
+        res.json({ userCarts });
+        console.log(userCarts, "Get userCarts users" );
+        
+        // console.log(user.username, user.email, "fullname of the users");
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error fetching user carts" });
+    }
+}
